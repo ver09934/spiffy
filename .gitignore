@@ -1,0 +1,9 @@
+# editor files
+*.sw*
+.vscode
+
+# python files
+*.pyc
+__pycache__
+venv
+
