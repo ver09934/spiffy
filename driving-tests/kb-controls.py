@@ -1,57 +1,40 @@
-# https://nerdparadise.com/programming/pygame/part6
+# https://stackoverflow.com/questions/10693256/how-to-accept-keypress-in-command-line-python
 
-import pygame
-import time
-from pygame.locals import *
+import curses
 
-def main():
+stdscr = curses.initscr()
 
-    pygame.init()
-    screen = pygame.display.set_mode((640, 480))
+curses.noecho()
+curses.cbreak()
 
-    x = 0
-    y = 0
+stdscr.keypad(True)
 
-    up = False
-    down = False
-    right = False
-    left = False
+stdscr.addstr(0, 0 , "Use arrow keys to drive, press any key to stop.")
+stdscr.refresh()
 
+try:
     while True:
 
-        for event in pygame.event.get():
+        key = stdscr.getch()
 
-            if event.type == KEYDOWN:
-                if event.key == K_UP:
-                    up = True
-                if event.key == K_DOWN:
-                    down = True
-                if event.key == K_RIGHT:
-                    right = True
-                if event.key == K_LEFT:
-                    left = True
+        stdscr.clear()
 
-            if event.type == KEYUP:
-                if event.key == K_UP:
-                    up = False
-                if event.key == K_DOWN:
-                    down = False
-                if event.key == K_RIGHT:
-                    right = False
-                if event.key == K_LEFT:
-                    left = False
-
-        if up:
-            y += 1
-        if down:
-            y -= 1
-        if right:
-            x += 1
-        if left:
-            x -= 1
-
-        print("x: {} y: {}".format(x, y))
-    
-        time.sleep(0.05)
+        if key == curses.KEY_UP:
+            stdscr.addstr(0, 0, "Forwards")
+        elif key == curses.KEY_DOWN:
+            stdscr.addstr(0, 0, "Backwards")
+        elif key == curses.KEY_LEFT:
+            stdscr.addstr(0, 0, "Left")
+        elif key == curses.KEY_RIGHT:
+            stdscr.addstr(0, 0, "Right")
+        else:
+            stdscr.addstr(0, 0, "Stop")
         
-main()
+        stdscr.refresh()
+
+except:
+    curses.nocbreak()
+    stdscr.keypad(False)
+    curses.echo()
+    curses.endwin()
+    print("Killed it!")
