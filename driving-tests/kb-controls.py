@@ -10,16 +10,48 @@ def main():
     screen = pygame.display.set_mode((640, 480))
 
     x = 0
+    y = 0
+
+    up = False
+    down = False
+    right = False
+    left = False
 
     while True:
 
-        keys = pygame.key.get_pressed()
-        
-        if keys[pygame.K_UP]:
-            x -= 1
-        if keys[pygame.K_DOWN]:
-            x += 1
+        for event in pygame.event.get():
 
-        print(x)
+            if event.type == KEYDOWN:
+                if event.key == K_UP:
+                    up = True
+                if event.key == K_DOWN:
+                    down = True
+                if event.key == K_RIGHT:
+                    right = True
+                if event.key == K_LEFT:
+                    left = True
+
+            if event.type == KEYUP:
+                if event.key == K_UP:
+                    up = False
+                if event.key == K_DOWN:
+                    down = False
+                if event.key == K_RIGHT:
+                    right = False
+                if event.key == K_LEFT:
+                    left = False
+
+        if up:
+            y += 1
+        if down:
+            y -= 1
+        if right:
+            x += 1
+        if left:
+            x -= 1
+
+        print("x: {} y: {}".format(x, y))
+    
+        time.sleep(0.05)
         
 main()
