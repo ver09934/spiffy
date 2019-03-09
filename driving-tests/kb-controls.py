@@ -12,8 +12,8 @@ stdscr.refresh()
 
 currentDirection = "Stop"
 
-fwb = 0x90
-bwb = 0x70
+fwb = 0xfe
+bwb = 0x00
 nb = 0x80
 sb = 0xff
 
