@@ -3,6 +3,9 @@
 Servo leftMotor;
 Servo rightMotor;
 
+int leftPower;
+int rightPower;
+
 byte myBuffer[2] = {0, 0};
 
 void setup() {
@@ -18,17 +21,20 @@ void setup() {
 
 void loop() {
 
-  if (Serial.available() > 0) {
-
-    Serial.readBytesUntil(0xff, myBuffer, 1000);
-
-    leftPower = map(myBuffer[0], 0, 0xff, 0, 180);
-    rightPower = map(myBuffer[1], 0, 0xff, 0, 180);
-
-    leftMotor.write(leftPower);
-    rightMotor.write(rightPower);
-
+  while (Serial.available() > 0) {
+    int inByte = Serial.read();
+    myBuffer[0] = myBuffer[1];
+    myBuffer[1] = inByte;
   }
+
+  leftPower = map(myBuffer[0], 0, 0xff, 0, 180);
+  rightPower = map(myBuffer[1], 0, 0xff, 0, 180);
+
+  leftMotor.write(leftPower);
+  rightMotor.write(rightPower);
+  
+  // Serial.println(myBuffer[0] + " " + myBuffer[1]);
+  // delay(500);
   delay(10);
 }
 
