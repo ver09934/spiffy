@@ -58,7 +58,7 @@ try:
                 drivecontroller.writeByte(nb)
                 drivecontroller.writeByte(nb)
 
-            drivecontroller.writeByte(sb)
+#            drivecontroller.writeByte(sb)
 
 except:
     curses.nocbreak()
