@@ -6,7 +6,7 @@ Servo rightMotor;
 int leftPower;
 int rightPower;
 
-byte myBuffer[2] = {0, 0};
+byte myBuffer[2] = {0x80, 0x80}; // Neutral
 
 void setup() {
 
