@@ -28,6 +28,9 @@ The hospital disinfection robot.
     $ sudo apt update && sudo apt upgrade
     $ sudo apt install tmux vim python3-venv tree
     ```
+    <!---
+    TODO: Update installed packages and add git aliases
+    -->
 * Add aliases to `.bashrc`
     ```
     alias la="ls -a"

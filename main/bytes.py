@@ -1,6 +1,6 @@
 import numpy as np
 
-vals = np.array([1, 1, 1, 1, 1, 1, 1, 1])
+vals = np.array([1, 1, 1, 1, 1, 1, 1, 0])
 
 x = 0
 for i in range(0, vals.size):
