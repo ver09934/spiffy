@@ -12,7 +12,7 @@ class SerialWriter:
             self.ser = serial.Serial('/dev/ttyACM1', 9600)
             print("Fell back to /dec/ttyACM1")
         
-        self.byteArr = np.array([0xff, 0xff, 0x00, 0])
+        self.byteArr = np.array([0x80, 0x80, 0x00, 0])
         # self.byteArr = [0xff, 0xff, 0, 0]
         # self.byteArr = np.array([0.5, 0.5, 0, 0])
 
