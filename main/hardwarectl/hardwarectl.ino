@@ -10,7 +10,7 @@ int rightPower;
 int stepperCount = 0; // Current position
 int stepperPosition = 0; // Desired position
 
-int relayByte[8];
+int relayByte[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 #define BUFFER_LENGTH 4
 byte serialBuffer[BUFFER_LENGTH] = {0x80, 0x80, 0x00, 0x00}; // Neutral values

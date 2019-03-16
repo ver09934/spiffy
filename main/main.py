@@ -28,7 +28,7 @@ def driveTest(writer):
 def stepperTest(writer):
     writer.setStepperPosition(0xff)
     writer.writeAllBytes()
-    time.sleep(15)
+    time.sleep(21)
     writer.setStepperPosition(0x00)
     writer.writeAllBytes()
 
