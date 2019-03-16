@@ -2,46 +2,46 @@ import serial
 import numpy as np
 
 class SerialWriter:
-
-    # Declare class vars for initial values (neutral for motors, off for etc.)
-        # Just declare the byteArr up here instead...
-    # Keep in mind that reversing is NOT WORKING on one of the ESCs
-
-    # TODO: Should motor powers be sclaed between 0.5 and 1, if a second ESC with functioning reversing is obtained?
-    # (0,0.5,1 --> backward,stop,forward)
-    # Or, should power be sclaed from 0,1 --> stop,forward
     
     def __init__(self):
+
         try:
-            ser = serial.Serial('/dev/ttyACM0', 9600)
+            self.ser = serial.Serial('/dev/ttyACM0', 9600)
             print("Using /dec/ttyACM0")
         except:
-            ser = serial.Serial('/dev/ttyACM1', 9600)
+            self.ser = serial.Serial('/dev/ttyACM1', 9600)
             print("Fell back to /dec/ttyACM1")
-        byteArr = np.array([0, 0, 0, 0]) # TODO: Better intial values
-
-    # --- Sending values over serial ---
-
-    def writeByte(val):
-        ser.write(bytes([val]))
-
-    def writeAllBytes():
-        # Encode the values
-
-
-        # Send the values
-        for byte in byteArr:
-            writeByte(byte)
+        
+        self.byteArr = np.array([0.5, 0.5, 0, 0])
 
     # --- Setting the values ---
 
-    def setLeftPower():
-        pass # TODO
-    def setRightPower():
-        pass # TODO
+    def setLeftPower(self, power):
+        self.byteArr[0] = int(map(power, 0, 1, 0x00, 0xff))
+    
+    def setRightPower(self, power):
+        self.byteArr[1] = int(map(power, 0, 1, 0x00, 0xff))
 
-    # Takes a numpy array of bits
-    # Example: vals = np.array([1, 1, 1, 1, 1, 1, 1, 0])
+    def setStepperPosition(self, position):
+        self.byteArr[2] = int(map(position, 0, 1, 0x00, 0xff))
+
+    def setBit(self, position, bit):
+        if bit == 1:
+            self.byteArr[3] = self.byteArr[3] | (1 << (position - 1))
+        else:
+            self.byteArr[3] = self.byteArr[3] & ~(1 << (position - 1))
+        
+    # --- Sending values over serial ---
+
+    def writeAllBytes(self):
+        for val in self.byteArr:
+            self.ser.write(bytes([val]))
+        # ser.write(bytes(byteArr))
+
+    # --- Util Methods ---
+
+    # Convert numpy array of bits (ex. np.array([1, 1, 1, 1, 1, 1, 1, 0])) to int
+    @staticmethod
     def encodeToByte(bitArray):
         out = 0
         for i in range(0, bitArray.size):
@@ -49,3 +49,11 @@ class SerialWriter:
             if i < bitArray.size - 1:
                 out = out << 1
         return out
+
+    @staticmethod
+    def map(val, minIn, maxIn, minOut, maxOut):
+        spanIn = maxIn - minIn
+        spanOut = maxOut - minOut
+        val = float(val - minIn) / float(spanIn)
+        val = minOut + (val * spanOut)
+        return val
