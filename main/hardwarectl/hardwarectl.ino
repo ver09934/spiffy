@@ -9,16 +9,20 @@ byte serialBuffer[4] = {0x80, 0x80, 0x00, 0x00}; // Neutral values
 
 void setup() {
 
+    Serial.begin(9600);
+
     leftMotor.attach(5);
     rightMotor.attach(6);
 
-    leftMotor.write(0);
-    rightMotor.write(0);
+    leftMotor.writeMicroseconds(1050);
+    rightMotor.writeMicroseconds(1050);
 
-    Serial.begin(9600);
+    delay(3000);
 
-    // TODO: ESC initialization procedure - potentially methodize...
-    // TODO: Stepper motor setup
+    leftMotor.writeMicroseconds(1500);
+    rightMotor.writeMicroseconds(1500);
+
+    delay(1000);
 }
 
 void loop() {

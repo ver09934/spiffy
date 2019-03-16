@@ -11,9 +11,11 @@ def main():
 def driveTest(writer):
     writer.setLeftPower(1)
     writer.setRightPower(1)
+    writer.writeAllBytes()
     time.sleep(3)
-    writer.setLeftPower(0)
-    writer.setRightPower(0)
+    writer.setLeftPower(0.5)
+    writer.setRightPower(0.5)
+    writer.writeAllBytes()
 
 def lightTest(serialWriter):
     pass
