@@ -43,7 +43,15 @@ void setup() {
     leftMotor.writeMicroseconds(1500);
     rightMotor.writeMicroseconds(1500);
 
-    delay(1000);
+    bool waiting = true;
+    while (waiting) {
+        while (Serial.available() > 0) {
+            if (Serial.read() == 0xfe) {
+                waiting = false;
+                break;
+            }
+        }
+    }
 }
 
 void loop() {

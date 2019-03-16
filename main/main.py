@@ -8,6 +8,8 @@ def main():
     serialWriter = serialwriter.SerialWriter()
     time.sleep(3)
     print("Delay over")
+    serialWriter.connect()
+    time.sleep(3)
     # driveTest(serialWriter)
     # stepperTest(serialWriter)
     relayTest(serialWriter)
