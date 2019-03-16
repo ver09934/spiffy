@@ -51,17 +51,29 @@ def relayTest(writer):
 
 def demo(writer):
     turnTime = 3
-    writer.setLeftPower(0xff)
-    writer.setRightPower(0x00)
+
+    writer.setLeftPower(0x00)
+    writer.setRightPower(0xff)
     writer.setStepperPosition(0xff)
     writer.writeAllBytes()
     time.sleep(turnTime)
+    
     writer.setLeftPower(0x80)
     writer.setRightPower(0x80)
     writer.writeAllBytes()
     time.sleep(21 - turnTime)
-    writer.setStepperPosition(0xff)
+
+    time.sleep(0.5)
+    writer.setBit(1, 1)
     writer.writeAllBytes()
+    time.sleep(1)
+    writer.setBit(1, 0)
+    writer.writeAllBytes()
+    time.sleep(0.5)
+    
+    writer.setStepperPosition(0x00)
+    writer.writeAllBytes()
+    time.sleep(21)
 
 '''
 def demo(writer):
