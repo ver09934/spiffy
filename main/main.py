@@ -1,5 +1,6 @@
 import serialwriter
 import time
+import threading
 
 # TODO: This is inevitably going to need threading... so much fun!
 # TODO: Should probably try to document this process for the engineering notebook...
@@ -10,7 +11,8 @@ def main():
     print("Delay over")
     # driveTest(serialWriter)
     # stepperTest(serialWriter)
-    relayTest(serialWriter)
+    # relayTest(serialWriter)
+    demo(serialWriter)
 
 def driveTest(writer):
     # writer.setLeftPower(1)
@@ -47,6 +49,31 @@ def relayTest(writer):
     writer.setBit(2, 0)
     writer.writeAllBytes()
 
+def demo(writer):
+    turnTime = 3
+    writer.setLeftPower(0xff)
+    writer.setRightPower(0x00)
+    writer.setStepperPosition(0xff)
+    writer.writeAllBytes()
+    time.sleep(turnTime)
+    writer.setLeftPower(0x80)
+    writer.setRightPower(0x80)
+    writer.writeAllBytes()
+    time.sleep(21 - turnTime)
+    writer.setStepperPosition(0xff)
+    writer.writeAllBytes()
+
+'''
+def demo(writer):
+    threading.Thread(target=demo1, args=(writer,)).start()
+    threading.Thread(target=demo1, args=(writer,)).start()
+
+def demo1():
+    pass
+
+def demo2():
+    pass
+'''
 
 if __name__ == "__main__":
     main()
