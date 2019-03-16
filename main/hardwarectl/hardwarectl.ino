@@ -6,22 +6,30 @@ Servo rightMotor;
 int leftPower;
 int rightPower;
 
-// The Pi will always send four bytes whenever it wants to update any values
+// Min 0, Max 28,000
+int stepperCount = 0; // Current position
+int stepperPosition = 0; // Desired position
 
 #define BUFFER_LENGTH 4
 byte serialBuffer[BUFFER_LENGTH] = {0x80, 0x80, 0x00, 0x00}; // Neutral values
 
 void setup() {
 
+    pinMode(8, OUTPUT);
+    pinMode(9, OUTPUT);
+    // digitalWrite(9, LOW);
+
     Serial.begin(9600);
 
     leftMotor.attach(5);
     rightMotor.attach(6);
 
+    /*
     leftMotor.writeMicroseconds(1050);
     rightMotor.writeMicroseconds(1050);
 
     delay(3000);
+    */
 
     leftMotor.writeMicroseconds(1500);
     rightMotor.writeMicroseconds(1500);
@@ -39,14 +47,20 @@ void loop() {
         serialBuffer[BUFFER_LENGTH - 1] = inByte;
     }
 
+    // TODO: See if these need to be converted to int (add 0.5 and cast to int to round)
     leftPower = map(serialBuffer[0], 0, 0xff, 0, 180);
     rightPower = map(serialBuffer[1], 0, 0xff, 0, 180);
-
-    // TODO: Get values
-    // stepperPosition = map(serialBuffer[2], 0, 0xff, 0, MAX);
+    stepperPosition = map(serialBuffer[2], 0, 0xff, 0, 28000);
 
     leftMotor.write(leftPower);
     rightMotor.write(rightPower);
+
+    if ((stepperCount < stepperPosition) && (stepperCount + 1 <= 28000)) {
+        stepUp();
+    }
+    else if ((stepperCount > stepperPosition) && (stepperCount - 1 >= 0) {
+        stepDown();
+    }
 
     delay(10);
 }
@@ -60,3 +74,40 @@ int getBytes(byte val) {
     return out;
 }
 
+void stepUp() {
+    digitalWrite(9, LOW);
+    digitalWrite(8, HIGH);
+    delayMicroseconds(250);          
+    digitalWrite(8, LOW); 
+    delayMicroseconds(250);  
+    stepperCount += 1; 
+}
+
+void stepDown() {
+    digitalWrite(9, HIGH);
+    digitalWrite(8, HIGH);
+    delayMicroseconds(250);          
+    digitalWrite(8, LOW); 
+    delayMicroseconds(250);
+    stepperCount -= 1;
+}
+
+/*
+digitalWrite(9, LOW);
+for (int i = 0; i <= 28000; i++) {
+    digitalWrite(8, HIGH);
+    delayMicroseconds(250);          
+    digitalWrite(8, LOW); 
+    delayMicroseconds(250);        
+}  
+delay(3000);
+
+digitalWrite(9, HIGH);
+for (int i = 0; i <= 28000; i++) {
+    digitalWrite(8, HIGH);
+    delayMicroseconds(250);          
+    digitalWrite(8, LOW); 
+    delayMicroseconds(250);        
+}  
+delay(3000);
+*/
