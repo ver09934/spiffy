@@ -3,9 +3,13 @@
 Servo leftMotor;
 Servo rightMotor;
 
+int leftPower;
+int rightPower;
+
 // The Pi will always send four bytes whenever it wants to update any values
 
-byte serialBuffer[4] = {0x80, 0x80, 0x00, 0x00}; // Neutral values
+#define BUFFER_LENGTH 4
+byte serialBuffer[BUFFER_LENGTH] = {0x80, 0x80, 0x00, 0x00}; // Neutral values
 
 void setup() {
 
@@ -29,10 +33,10 @@ void loop() {
 
     while (Serial.available() > 0) {
         int inByte = Serial.read();
-        for (int i = 0; i < serialBuffer.length - 1; i++) {
+        for (int i = 0; i < BUFFER_LENGTH - 1; i++) {
             serialBuffer[i] = serialBuffer[i + 1];
         }
-        serialBuffer[serialBuffer.length] = inByte;
+        serialBuffer[BUFFER_LENGTH - 1] = inByte;
     }
 
     leftPower = map(serialBuffer[0], 0, 0xff, 0, 180);
@@ -47,11 +51,12 @@ void loop() {
     delay(10);
 }
 
-int[] getBytes(byte val) {
-    int[] out = [8];
+int getBytes(byte val) {
+    int out[8];
     for (int i = 0; i < 8; i++) {
         out[8 - i - 1] = val & 1;
-       	x = x >> 1
+       	val = val >> 1;
     }
+    return out;
 }
 
