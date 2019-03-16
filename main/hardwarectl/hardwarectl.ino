@@ -25,8 +25,8 @@ void setup() {
     // Relay pins
     pinMode(11, OUTPUT);
     pinMode(12, OUTPUT);
-    digitalWrite(11, LOW);
-    digitalWrite(12, LOW);
+    digitalWrite(11, HIGH);
+    digitalWrite(12, HIGH);
 
     Serial.begin(9600);
 
@@ -66,17 +66,17 @@ void loop() {
     rightMotor.write(rightPower);
 
     if (relayByte[7] == 1) {
-        digitalWrite(11, HIGH);
+        digitalWrite(11, LOW);
     }
     else {
-        digitalWrite(11, LOW);
+        digitalWrite(11, HIGH);
     }
 
     if (relayByte[6] == 1) {
-        digitalWrite(12, HIGH);
+        digitalWrite(12, LOW);
     }
     else {
-        digitalWrite(12, LOW);
+        digitalWrite(12, HIGH);
     }
 
     if ((stepperCount < stepperPosition) && (stepperCount + 1 <= 28000)) {
