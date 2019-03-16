@@ -10,14 +10,23 @@ int rightPower;
 int stepperCount = 0; // Current position
 int stepperPosition = 0; // Desired position
 
+int relayByte[8];
+
 #define BUFFER_LENGTH 4
 byte serialBuffer[BUFFER_LENGTH] = {0x80, 0x80, 0x00, 0x00}; // Neutral values
 
 void setup() {
 
+    // Stepper pins
     pinMode(8, OUTPUT);
     pinMode(9, OUTPUT);
     // digitalWrite(9, LOW);
+
+    // Relay pins
+    pinMode(11, OUTPUT);
+    pinMode(12, OUTPUT);
+    digitalWrite(11, LOW);
+    digitalWrite(12, LOW);
 
     Serial.begin(9600);
 
@@ -51,9 +60,24 @@ void loop() {
     leftPower = map(serialBuffer[0], 0, 0xff, 0, 180);
     rightPower = map(serialBuffer[1], 0, 0xff, 0, 180);
     stepperPosition = map(serialBuffer[2], 0, 0xff, 0, 28000);
+    writeBits(serialBuffer[3]);
 
     leftMotor.write(leftPower);
     rightMotor.write(rightPower);
+
+    if (relayByte[7] == 1) {
+        digitalWrite(11, HIGH);
+    }
+    else {
+        digitalWrite(11, LOW);
+    }
+
+    if (relayByte[6] == 1) {
+        digitalWrite(12, HIGH);
+    }
+    else {
+        digitalWrite(12, LOW);
+    }
 
     if ((stepperCount < stepperPosition) && (stepperCount + 1 <= 28000)) {
         stepUp();
@@ -66,13 +90,16 @@ void loop() {
     }
 }
 
-int getBytes(byte val) {
+void writeBits(byte val) {
     int out[8];
     for (int i = 0; i < 8; i++) {
         out[8 - i - 1] = val & 1;
        	val = val >> 1;
     }
-    return out;
+    // return out;
+    for (int i = 0; i < 8; i++) {
+      relayByte[i] = out[i];
+    }
 }
 
 void stepUp() {

@@ -9,7 +9,8 @@ def main():
     time.sleep(3)
     print("Delay over")
     # driveTest(serialWriter)
-    stepperTest(serialWriter)
+    # stepperTest(serialWriter)
+    relayTest(serialWriter)
 
 def driveTest(writer):
     # writer.setLeftPower(1)
@@ -30,6 +31,22 @@ def stepperTest(writer):
     time.sleep(15)
     writer.setStepperPosition(0x00)
     writer.writeAllBytes()
+
+def relayTest(writer):
+    # position, bit
+    # relay 1
+    writer.setBit(1, 1)
+    writer.writeAllBytes()
+    time.sleep(1)
+    writer.setBit(1, 0)
+    writer.writeAllBytes()
+    # relay 2
+    writer.setBit(2, 1)
+    writer.writeAllBytes()
+    time.sleep(1)
+    writer.setBit(2, 0)
+    writer.writeAllBytes()
+
 
 if __name__ == "__main__":
     main()
