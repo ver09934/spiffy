@@ -29,19 +29,43 @@ The hospital disinfection robot.
     $ sudo apt install tmux vim python3-venv tree
     ```
     <!---
-    TODO: Update installed packages and add git aliases
+    TODO: Update installed packages and add git aliases, .vimrc, etc.
     -->
-* Add aliases to `.bashrc`
+* Add aliases to `~/.bashrc`
     ```
     alias la="ls -a"
     alias ll="ls -al"
     alias venvy=". /venv/bin/activate"
+    alias mkvenv="python3 -m venv venv"
+    alias temp="vcgencmd measure_temp"
+    ```
+* Basic `~/.vimrc`
+    ```
+    set number
+    syntax enable
+    ```
+* Setup `~/.gitconfig` (can also be through by individual commands)
+    ```
+    [user]
+        name = example
+        email = example@example.com
+    [alias]
+            lg = log --all --decorate --oneline --graph --color
+            st = status
+    [credential]
+            helper = cache --timeout=36000
     ```
 * Install libraries (run pip install in virtual environment, create one with `python3 -m venv venv`)
     ```
     $ sudo apt install python-serial python3-serial
-    $ pip install pyserial
+    $ sudo apt install fswebcam ffmpeg arduino git xvfb
+    $ sudo apt install python-dev python3-dev
+    $ sudo apt install libatlas3-base libsz2 libharfbuzz0b libtiff5 libjasper1 libilmbase12 libopenexr22 libilmbase12 libgstreamer1.0-0 libavcodec57 libavformat57 libavutil55 libswscale4 libqtgui4 libqt4-test libqtcore4
+    $ pip install pyserial opencv-python imutils numpy
     ```
+    <!---
+    TODO: `pip install serial` needed?
+    -->
 * Hardware configuration
     ```
     $ sudo raspi-config
