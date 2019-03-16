@@ -58,11 +58,12 @@ void loop() {
     if ((stepperCount < stepperPosition) && (stepperCount + 1 <= 28000)) {
         stepUp();
     }
-    else if ((stepperCount > stepperPosition) && (stepperCount - 1 >= 0) {
+    else if ((stepperCount > stepperPosition) && (stepperCount - 1 >= 0)) {
         stepDown();
     }
-
-    delay(10);
+    else {
+        delay(10);
+    }
 }
 
 int getBytes(byte val) {

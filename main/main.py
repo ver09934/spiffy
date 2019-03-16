@@ -26,8 +26,10 @@ def driveTest(writer):
 
 def stepperTest(writer):
     writer.setStepperPosition(0xff)
-    time.sleep(10)
+    writer.writeAllBytes()
+    time.sleep(15)
     writer.setStepperPosition(0x00)
+    writer.writeAllBytes()
 
 if __name__ == "__main__":
     main()
