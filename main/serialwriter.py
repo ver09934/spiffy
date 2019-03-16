@@ -12,7 +12,7 @@ class SerialWriter:
             self.ser = serial.Serial('/dev/ttyACM1', 9600)
             print("Fell back to /dec/ttyACM1")
         
-        self.byteArr = np.array([0xff, 0xff, 0, 0])
+        self.byteArr = np.array([0xff, 0xff, 0x00, 0])
         # self.byteArr = [0xff, 0xff, 0, 0]
         # self.byteArr = np.array([0.5, 0.5, 0, 0])
 
@@ -27,7 +27,8 @@ class SerialWriter:
         # self.byteArr[1] = int(map(power, 0, 1, 0x00, 0xff))
 
     def setStepperPosition(self, position):
-        self.byteArr[2] = int(map(position, 0, 1, 0x00, 0xff))
+        self.byteArr[2] = position
+        # self.byteArr[2] = int(map(position, 0, 1, 0x00, 0xff))
 
     def setBit(self, position, bit):
         if bit == 1:

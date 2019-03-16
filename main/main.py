@@ -6,9 +6,10 @@ import time
 
 def main():
     serialWriter = serialwriter.SerialWriter()
-    time.sleep(10)
+    time.sleep(3)
     print("Delay over")
-    driveTest(serialWriter)
+    # driveTest(serialWriter)
+    stepperTest(serialWriter)
 
 def driveTest(writer):
     # writer.setLeftPower(1)
@@ -23,8 +24,10 @@ def driveTest(writer):
     writer.setRightPower(0x80)
     writer.writeAllBytes()
 
-def lightTest(serialWriter):
-    pass
+def stepperTest(writer):
+    writer.setStepperPosition(0xff)
+    time.sleep(10)
+    writer.setStepperPosition(0x00)
 
 if __name__ == "__main__":
     main()
