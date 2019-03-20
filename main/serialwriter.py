@@ -66,3 +66,7 @@ class SerialWriter:
         val = float(val - minIn) / float(spanIn)
         val = minOut + (val * spanOut)
         return val
+
+    @staticmethod
+    def clamp(val, minVal, maxVal):
+        return min(max(val, minVal), maxVal)
