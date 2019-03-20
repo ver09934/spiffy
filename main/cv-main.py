@@ -7,10 +7,13 @@ cap = cv2.VideoCapture(-1)
 
 serialWriter = serialwriter.SerialWriter()
 
-baseSpeed = 0.5
+baseSpeed = 0.2
 minSpeed = 0
 maxSpeed = 1
-kp = 1
+kp = 0.1
+ktest = 0.006
+
+counter = 0
 
 while True:
 
@@ -29,7 +32,6 @@ while True:
     threshold = 15  # minimum number of votes (intersections in Hough grid cell)
     min_line_length = 50  # minimum number of pixels making up a line
     max_line_gap = 20  # maximum gap in pixels between connectable line segments
-    line_image = np.copy(img) * 0  # creating a blank to draw lines on
 
     # Run Hough on edge detected image
     # Output "lines" is an array containing endpoints of detected line segments
@@ -54,6 +56,8 @@ while True:
         xDev = 0
         angleDev = 0
 
+    angleDev += ktest * xDev
+
     leftSpeed = baseSpeed - kp * angleDev
     rightSpeed = baseSpeed + kp * angleDev
 
@@ -62,7 +66,11 @@ while True:
 
     serialWriter.setLeftPower(leftSpeed)
     serialWriter.setRightPower(rightSpeed)
-    serialWriter.writeAllBytes()
+
+    if counter % 3 == 0:
+        serialWriter.writeAllBytes()
+        print("--- SENT ---")
+    counter += 1
 
     print(angleDev)
 
