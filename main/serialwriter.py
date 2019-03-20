@@ -59,14 +59,12 @@ class SerialWriter:
                 out = out << 1
         return out
 
-    @staticmethod
-    def map(val, minIn, maxIn, minOut, maxOut):
-        spanIn = maxIn - minIn
-        spanOut = maxOut - minOut
-        val = float(val - minIn) / float(spanIn)
-        val = minOut + (val * spanOut)
-        return val
+def map(val, minIn, maxIn, minOut, maxOut):
+    spanIn = maxIn - minIn
+    spanOut = maxOut - minOut
+    val = float(val - minIn) / float(spanIn)
+    val = minOut + (val * spanOut)
+    return val
 
-    @staticmethod
-    def clamp(val, minVal, maxVal):
-        return min(max(val, minVal), maxVal)
+def clamp(val, minVal, maxVal):
+    return min(max(val, minVal), maxVal)

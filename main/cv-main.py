@@ -1,15 +1,16 @@
 import cv2
 import numpy as np
 import math
+import serialwriter
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(-1)
 
 serialWriter = serialwriter.SerialWriter()
 
 baseSpeed = 0.5
 minSpeed = 0
 maxSpeed = 1
-kp = 0.7
+kp = 1
 
 while True:
 
@@ -45,10 +46,13 @@ while True:
                 angle = angle if angle > 0 else angle + np.pi
                 angles.append(angle)
 
-    averageX = sum(xVals) / len(xVals)
-    xDev = averageX - (img.shape[1] / 2)
-    avgAngle = sum(angles) / len(angles)
-    angleDev = avgAngle - (np.pi / 2)
+        averageX = sum(xVals) / len(xVals)
+        xDev = averageX - (img.shape[1] / 2)
+        avgAngle = sum(angles) / len(angles)
+        angleDev = avgAngle - (np.pi / 2)
+    else:
+        xDev = 0
+        angleDev = 0
 
     leftSpeed = baseSpeed - kp * angleDev
     rightSpeed = baseSpeed + kp * angleDev
@@ -57,7 +61,7 @@ while True:
     rightSpeed = serialwriter.map(serialwriter.clamp(rightSpeed, 0, 1), 0, 1, 0x80, 0xff)
 
     serialWriter.setLeftPower(leftSpeed)
-    serialWriter.setRightSpeed(rightSpeed)
+    serialWriter.setRightPower(rightSpeed)
     serialWriter.writeAllBytes()
 
     print(angleDev)
