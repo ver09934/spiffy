@@ -16,7 +16,7 @@ class SerialWriter:
         # self.byteArr = [0xff, 0xff, 0, 0]
         # self.byteArr = np.array([0.5, 0.5, 0, 0])
 
-    # --- Setting the values ---
+    # --- Setting the values, raw ---
 
     def setLeftPower(self, power):
         self.byteArr[0] = power
@@ -35,6 +35,10 @@ class SerialWriter:
             self.byteArr[3] = self.byteArr[3] | (1 << (position - 1))
         else:
             self.byteArr[3] = self.byteArr[3] & ~(1 << (position - 1))
+
+    # --- Setting the values, mapped ---
+
+    # TODO
         
     # --- Sending values over serial ---
 
