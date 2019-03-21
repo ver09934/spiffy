@@ -8,7 +8,7 @@ def show(image):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-img = cv2.imread('img.jpg')
+img = cv2.imread('../img.jpg')
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 kernel_size = 5
@@ -33,6 +33,7 @@ if lines is not None:
     for line in lines:
         for x1,y1,x2,y2 in line:
             cv2.line(line_image,(x1,y1),(x2,y2),(255,0,0),5)
+            cv2.line(img,(x1,y1),(x2,y2),(255,0,0),5)
 
 xVals = []
 angles = []
@@ -57,4 +58,10 @@ print("angleDev: " + str(angleDev))
 # Draw the lines on the  image
 lines_edges = cv2.addWeighted(img, 0.8, line_image, 1, 0)
 
-show(line_image)
+cv2.putText(img, 'Angle Deviation: ' + str(round(angleDev, 2)) + ' rad', (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+cv2.putText(img, 'Shift: ' + str(xDev) + ' px', (5, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+
+cv2.imwrite('../test.jpg', img)
+
+show(img)
+
