@@ -7,10 +7,10 @@ cap = cv2.VideoCapture(-1)
 
 serialWriter = serialwriter.SerialWriter()
 
-baseSpeed = 0.2
+baseSpeed = 0.15
 minSpeed = 0
 maxSpeed = 1
-kp = 0.1
+kp = 0.12
 ktest = 0.006
 
 counter = 0
@@ -56,7 +56,7 @@ while True:
         xDev = 0
         angleDev = 0
 
-    angleDev += ktest * xDev
+    # angleDev += ktest * xDev
 
     leftSpeed = baseSpeed - kp * angleDev
     rightSpeed = baseSpeed + kp * angleDev
@@ -67,7 +67,7 @@ while True:
     serialWriter.setLeftPower(leftSpeed)
     serialWriter.setRightPower(rightSpeed)
 
-    if counter % 3 == 0:
+    if counter % 4 == 0:
         serialWriter.writeAllBytes()
         print("--- SENT ---")
     counter += 1
