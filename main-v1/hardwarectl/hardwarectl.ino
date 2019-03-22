@@ -40,7 +40,10 @@ void setup() {
 
 void loop() {
 
+    boolean newData = false;
+
     while (Serial.available() > 0) {
+        newData = true;
         int inByte = Serial.read();
         for (int i = 0; i < BUFFER_LENGTH - 1; i++) {
             serialBuffer[i] = serialBuffer[i + 1];
@@ -48,29 +51,31 @@ void loop() {
         serialBuffer[BUFFER_LENGTH - 1] = inByte;
     }
 
-    for (int i = 0; i < BUFFER_LENGTH; i++) {
-        
-        int val = serialBuffer[i];
-        
-        int bits[8];
-        for (int i = 0; i < 8; i++) {
-            bits[8 - i - 1] = val & 1;
-            val = val >> 1;
-        }
-
-        // TODO: See if mapped vals need to be converted to int (add 0.5 and cast to int to round)
-        if (bits[0] == 0 && bits[1] == 0) {
-            leftPower = map(serialBuffer[i], 0, 0xff, 90, 180);
-        }
-        else if (bits[0] == 0 && bits[1] == 1) {
-            rightPower = map(serialBuffer[i], 0, 0xff, 90, 180);
-        }
-        else if (bits[0] == 1 && bits[1] == 0) {
-            stepperPosition = map(serialBuffer[i], 0, 0xff, 0, 28000);
-        }
-        else if (bits[0] == 1 && bits[1] == 1) {
+    if (newData) {
+        for (int i = 0; i < BUFFER_LENGTH; i++) {
+            
+            int val = serialBuffer[i];
+            
+            int bits[8];
             for (int i = 0; i < 8; i++) {
-                relayByte[i] = bits[i];
+                bits[8 - i - 1] = val & 1;
+                val = val >> 1;
+            }
+    
+            // TODO: See if mapped vals need to be converted to int (add 0.5 and cast to int to round)
+            if (bits[0] == 0 && bits[1] == 0) {
+                leftPower = map(serialBuffer[i], 0, 0xff, 90, 180);
+            }
+            else if (bits[0] == 0 && bits[1] == 1) {
+                rightPower = map(serialBuffer[i], 0, 0xff, 90, 180);
+            }
+            else if (bits[0] == 1 && bits[1] == 0) {
+                stepperPosition = map(serialBuffer[i], 0, 0xff, 0, 28000);
+            }
+            else if (bits[0] == 1 && bits[1] == 1) {
+                for (int i = 0; i < 8; i++) {
+                    relayByte[i] = bits[i];
+                }
             }
         }
     }
