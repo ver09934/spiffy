@@ -11,8 +11,7 @@ stdscr = curses.initscr()
 curses.noecho()
 curses.cbreak()
 stdscr.keypad(True)
-stdscr.addstr(0, 0 , "Use up/left/right to drive, any key to stop.")
-stdscr.addstr(0, 10 , "Use up/left/right to drive, any key to stop.")
+stdscr.addstr(0, 0, "Use up/left/right to drive, any key to stop, i/o for relays, p for gantry.")
 stdscr.refresh()
 
 currentDirection = "Stop"
