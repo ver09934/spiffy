@@ -53,17 +53,17 @@ try:
         if currentDirection != newDirection:
             currentDirection = newDirection
             if currentDirection == "Forwards":
-                writer.setLeftPower(0.4)
-                writer.setRightPower(0.4)
+                writer.setLeftPowerMapped(0.4)
+                writer.setRightPowerMapped(0.4)
             elif currentDirection == "Left":
-                writer.setLeftPower(0)
-                writer.setRightPower(0.4)
+                writer.setLeftPowerMapped(0)
+                writer.setRightPowerMapped(0.4)
             elif currentDirection == "Right":
-                writer.setLeftPower(0.4)
-                writer.setRightPower(0)
+                writer.setLeftPowerMapped(0.4)
+                writer.setRightPowerMapped(0)
             elif currentDirection == "Stop":
-                writer.setLeftPower(0)
-                writer.setRightPower(0)
+                writer.setLeftPowerMapped(0)
+                writer.setRightPowerMapped(0)
 
         if relay1:
             writer.setBit(1, 1)
@@ -76,9 +76,9 @@ try:
             writer.setBit(2, 0)
 
         if gantryToggle:
-            writer.setStepperPosition(1)
+            writer.setStepperPositionMapped(1)
         else:
-            writer.setStepperPosition(0)
+            writer.setStepperPositionMapped(0)
          
         writer.writeAllBytes()
 
