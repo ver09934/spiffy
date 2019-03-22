@@ -61,13 +61,13 @@ void loop() {
 
         // TODO: See if mapped vals need to be converted to int (add 0.5 and cast to int to round)
         if (bits[0] == 0 && bits[1] == 0) {
-            leftPower = map(serialBuffer[i] - byteIdVals[i], 0, 0xff, 90, 180);
+            leftPower = map(serialBuffer[i] - byteIdVals[i], 0, 0b00111111, 90, 180);
         }
         else if (bits[0] == 0 && bits[1] == 1) {
-            rightPower = map(serialBuffer[i] - byteIdVals[i], 0, 0xff, 90, 180);
+            rightPower = map(serialBuffer[i] - byteIdVals[i], 0, 0b00111111, 90, 180);
         }
         else if (bits[0] == 1 && bits[1] == 0) {
-            stepperPosition = map(serialBuffer[i] - byteIdVals[i], 0, 0xff, 0, 28000);
+            stepperPosition = map(serialBuffer[i] - byteIdVals[i], 0, 0b00111111, 0, 28000);
         }
         else if (bits[0] == 1 && bits[1] == 1) {
             for (int i = 0; i < 8; i++) {
