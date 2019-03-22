@@ -61,11 +61,11 @@ while True:
     leftSpeed = baseSpeed - kp * angleDev
     rightSpeed = baseSpeed + kp * angleDev
 
-    leftSpeed = serialwriter.map(serialwriter.clamp(leftSpeed, 0, 1), 0, 1, 0x80, 0xff)
-    rightSpeed = serialwriter.map(serialwriter.clamp(rightSpeed, 0, 1), 0, 1, 0x80, 0xff)
+    leftSpeed = serialwriter.clamp(leftSpeed, 0, 1)
+    rightSpeed = serialwriter.clamp(rightSpeed, 0, 1)
 
-    serialWriter.setLeftPower(leftSpeed)
-    serialWriter.setRightPower(rightSpeed)
+    serialWriter.setLeftPowerMapped(leftSpeed)
+    serialWriter.setRightPowerMapped(rightSpeed)
 
     if counter % 4 == 0:
         serialWriter.writeAllBytes()
