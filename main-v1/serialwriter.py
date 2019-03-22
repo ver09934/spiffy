@@ -12,23 +12,18 @@ class SerialWriter:
             self.ser = serial.Serial('/dev/ttyACM1', 9600)
             print("Fell back to /dev/ttyACM1")
         
-        self.byteArr = np.array([0x80, 0x80, 0x00, 0])
-        # self.byteArr = [0xff, 0xff, 0, 0]
-        # self.byteArr = np.array([0.5, 0.5, 0, 0])
+        self.byteArr = np.array([0b00_000000, 0b01_000000, 0b10_000000, 0b11_000000])
 
-    # --- Setting the values, raw ---
+    # --- Setting the values ---
 
-    def setLeftPower(self, power):
-        self.byteArr[0] = power
-        # self.byteArr[0] = int(map(power, 0, 1, 0x00, 0xff))
+    def setLeftPowerMapped(self, power):
+        self.byteArr[0] = 0b00_000000 + int(map(power, 0, 1, 0b00_000000, 0b00_111111))
     
-    def setRightPower(self, power):
-        self.byteArr[1] = power
-        # self.byteArr[1] = int(map(power, 0, 1, 0x00, 0xff))
+    def setRightPowerMapped(self, power):
+        self.byteArr[1] = 0b01_000000 + int(map(power, 0, 1, 0b00_000000, 0b00_111111))
 
-    def setStepperPosition(self, position):
-        self.byteArr[2] = position
-        # self.byteArr[2] = int(map(position, 0, 1, 0x00, 0xff))
+    def setStepperPositionMapped(self, position):
+        self.byteArr[2] = 0b10_000000 + int(map(position, 0, 1, 0b00_000000, 0b00_111111))
 
     def setBit(self, position, bit):
         if bit == 1:
@@ -36,23 +31,11 @@ class SerialWriter:
         else:
             self.byteArr[3] = self.byteArr[3] & ~(1 << (position - 1))
 
-    # --- Setting the values, mapped ---
-
-    def setLeftPowerMapped(self, power):
-        self.byteArr[0] = int(map(power, 0, 1, 0x80, 0xff))
-    
-    def setRightPowerMapped(self, power):
-        self.byteArr[1] = int(map(power, 0, 1, 0x80, 0xff))
-
-    def setStepperPositionMapped(self, position):
-        self.byteArr[2] = int(map(position, 0, 1, 0x00, 0xff))
-
     # --- Sending values over serial ---
 
     def writeAllBytes(self):
         for val in self.byteArr:
             self.ser.write(bytes([val]))
-        # self.ser.write(bytes(self.byteArr))
 
     # --- Util Methods ---
 

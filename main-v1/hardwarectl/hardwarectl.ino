@@ -10,17 +10,16 @@ int rightPower;
 int stepperCount = 0; // Current position
 int stepperPosition = 0; // Desired position
 
-int relayByte[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+int relayByte[8] = {1, 1, 0, 0, 0, 0, 0, 0};
 
 #define BUFFER_LENGTH 4
-byte serialBuffer[BUFFER_LENGTH] = {0x80, 0x80, 0x00, 0x00}; // Neutral values
+byte serialBuffer[BUFFER_LENGTH] = {0b00000000, 0b01000000, 0b10000000, 0b11000000}; // Neutral values
 
 void setup() {
 
     // Stepper pins
     pinMode(8, OUTPUT);
     pinMode(9, OUTPUT);
-    // digitalWrite(9, LOW);
 
     // Relay pins
     pinMode(11, OUTPUT);
@@ -32,13 +31,6 @@ void setup() {
 
     leftMotor.attach(5);
     rightMotor.attach(6);
-
-    /*
-    leftMotor.writeMicroseconds(1050);
-    rightMotor.writeMicroseconds(1050);
-
-    delay(3000);
-    */
 
     leftMotor.writeMicroseconds(1500);
     rightMotor.writeMicroseconds(1500);
@@ -56,11 +48,32 @@ void loop() {
         serialBuffer[BUFFER_LENGTH - 1] = inByte;
     }
 
-    // TODO: See if these need to be converted to int (add 0.5 and cast to int to round)
-    leftPower = map(serialBuffer[0], 0, 0xff, 0, 180);
-    rightPower = map(serialBuffer[1], 0, 0xff, 0, 180);
-    stepperPosition = map(serialBuffer[2], 0, 0xff, 0, 28000);
-    writeBits(serialBuffer[3]);
+    for (int i = 0; i < BUFFER_LENGTH; i++) {
+        
+        int val = serialBuffer[i];
+        
+        int bits[8];
+        for (int i = 0; i < 8; i++) {
+            bits[8 - i - 1] = val & 1;
+            val = val >> 1;
+        }
+
+        // TODO: See if mapped vals need to be converted to int (add 0.5 and cast to int to round)
+        if (bits[0] == 0 && bits[1] == 0) {
+            leftPower = map(serialBuffer[i], 0, 0xff, 90, 180);
+        }
+        else if (bits[0] == 0 && bits[1] == 1) {
+            rightPower = map(serialBuffer[i], 0, 0xff, 90, 180);
+        }
+        else if (bits[0] == 1 && bits[1] == 0) {
+            stepperPosition = map(serialBuffer[i], 0, 0xff, 0, 28000);
+        }
+        else if (bits[0] == 1 && bits[1] == 1) {
+            for (int i = 0; i < 8; i++) {
+                relayByte[i] = bits[i];
+            }
+        }
+    }
 
     leftMotor.write(leftPower);
     rightMotor.write(rightPower);
@@ -90,18 +103,6 @@ void loop() {
     }
 }
 
-void writeBits(byte val) {
-    int out[8];
-    for (int i = 0; i < 8; i++) {
-        out[8 - i - 1] = val & 1;
-       	val = val >> 1;
-    }
-    // return out;
-    for (int i = 0; i < 8; i++) {
-      relayByte[i] = out[i];
-    }
-}
-
 void stepUp() {
     digitalWrite(9, LOW);
     digitalWrite(8, HIGH);
@@ -120,22 +121,3 @@ void stepDown() {
     stepperCount -= 1;
 }
 
-/*
-digitalWrite(9, LOW);
-for (int i = 0; i <= 28000; i++) {
-    digitalWrite(8, HIGH);
-    delayMicroseconds(250);          
-    digitalWrite(8, LOW); 
-    delayMicroseconds(250);        
-}  
-delay(3000);
-
-digitalWrite(9, HIGH);
-for (int i = 0; i <= 28000; i++) {
-    digitalWrite(8, HIGH);
-    delayMicroseconds(250);          
-    digitalWrite(8, LOW); 
-    delayMicroseconds(250);        
-}  
-delay(3000);
-*/

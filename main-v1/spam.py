@@ -6,12 +6,12 @@ time.sleep(3)
 
 while True:
     writer.writeAllBytes()
-    time.sleep(0.5)
+    time.sleep(0.1)
 
 '''
-writer.setLeftPower(0x80)
-writer.setRightPower(0x80)
-writer.setStepperPosition(0x00)
+writer.setLeftPower(0)
+writer.setRightPower(0)
+writer.setStepperPosition(0)
 writer.setBit(1, 0)
 writer.setBit(2, 0)
 '''
