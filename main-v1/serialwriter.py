@@ -12,18 +12,18 @@ class SerialWriter:
             self.ser = serial.Serial('/dev/ttyACM1', 9600)
             print("Fell back to /dev/ttyACM1")
         
-        self.byteArr = np.array([0b00_000000, 0b01_000000, 0b10_000000, 0b11_000000])
+        self.byteArr = np.array([0b00000000, 0b01000000, 0b10000000, 0b11000000])
 
     # --- Setting the values ---
 
     def setLeftPowerMapped(self, power):
-        self.byteArr[0] = 0b00_000000 + int(map(power, 0, 1, 0b00_000000, 0b00_111111))
+        self.byteArr[0] = 0b00000000 + int(map(power, 0, 1, 0b00000000, 0b00111111))
     
     def setRightPowerMapped(self, power):
-        self.byteArr[1] = 0b01_000000 + int(map(power, 0, 1, 0b00_000000, 0b00_111111))
+        self.byteArr[1] = 0b01000000 + int(map(power, 0, 1, 0b00000000, 0b00111111))
 
     def setStepperPositionMapped(self, position):
-        self.byteArr[2] = 0b10_000000 + int(map(position, 0, 1, 0b00_000000, 0b00_111111))
+        self.byteArr[2] = 0b10000000 + int(map(position, 0, 1, 0b00000000, 0b00111111))
 
     def setBit(self, position, bit):
         if bit == 1:
