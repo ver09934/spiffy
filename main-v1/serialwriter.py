@@ -38,8 +38,15 @@ class SerialWriter:
 
     # --- Setting the values, mapped ---
 
-    # TODO
-        
+    def setLeftPowerMapped(self, power):
+        self.byteArr[0] = int(map(power, 0, 1, 0x80, 0xff))
+    
+    def setRightPowerMapped(self, power):
+        self.byteArr[1] = int(map(power, 0, 1, 0x80, 0xff))
+
+    def setStepperPositionMapped(self, position):
+        self.byteArr[2] = int(map(position, 0, 1, 0x00, 0xff))
+
     # --- Sending values over serial ---
 
     def writeAllBytes(self):
