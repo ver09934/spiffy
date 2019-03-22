@@ -13,7 +13,8 @@ int stepperPosition = 0; // Desired position
 int relayByte[8] = {1, 1, 0, 0, 0, 0, 0, 0};
 
 #define BUFFER_LENGTH 4
-byte serialBuffer[BUFFER_LENGTH] = {0b00000000, 0b01000000, 0b10000000, 0b11000000}; // Neutral values
+byte byteIdVals[BUFFER_LENGTH] = {0b00000000, 0b01000000, 0b10000000, 0b11000000};
+byte serialBuffer[BUFFER_LENGTH] = {0b00000000, 0b01000000, 0b10000000, 0b11000000};
 
 void setup() {
 
@@ -60,13 +61,13 @@ void loop() {
 
         // TODO: See if mapped vals need to be converted to int (add 0.5 and cast to int to round)
         if (bits[0] == 0 && bits[1] == 0) {
-            leftPower = map(serialBuffer[i], 0, 0xff, 90, 180);
+            leftPower = map(serialBuffer[i] - byteIdVals[i], 0, 0xff, 90, 180);
         }
         else if (bits[0] == 0 && bits[1] == 1) {
-            rightPower = map(serialBuffer[i], 0, 0xff, 90, 180);
+            rightPower = map(serialBuffer[i] - byteIdVals[i], 0, 0xff, 90, 180);
         }
         else if (bits[0] == 1 && bits[1] == 0) {
-            stepperPosition = map(serialBuffer[i], 0, 0xff, 0, 28000);
+            stepperPosition = map(serialBuffer[i] - byteIdVals[i], 0, 0xff, 0, 28000);
         }
         else if (bits[0] == 1 && bits[1] == 1) {
             for (int i = 0; i < 8; i++) {
