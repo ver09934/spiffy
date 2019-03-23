@@ -67,8 +67,3 @@ showImg(orig)
 showImg(thresh)
 showImg(img)
 
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
