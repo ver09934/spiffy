@@ -8,10 +8,10 @@ def main():
     writer = serialwriter.SerialWriter()
     time.sleep(3)
 
-    turnTime = 6
+    turnTime = 2.5
 
     writer.setLeftPowerMapped(0)
-    writer.setRightPowerMapped(0.2)
+    writer.setRightPowerMapped(0.3)
     writer.setStepperPositionMapped(1)
     writer.writeAllBytes()
     time.sleep(turnTime)
