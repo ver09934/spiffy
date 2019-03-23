@@ -15,6 +15,8 @@ counter = 0
 
 cap = cv2.VideoCapture(-1)
 
+baseVal = 20
+
 while True:
 
     ret, img = cap.read()
@@ -40,7 +42,14 @@ while True:
         
         # TODO: Loop this until len(approx) == 4, changing decreasing arg #2 if <4 and increasing if >4
         # Admittedly not the best method, but then, none of this is...
-        approx = cv2.approxPolyDP(main_contour, 20, True)
+        approx = cv2.approxPolyDP(main_contour, baseVal, True)
+
+        while len(approx) < 4:
+            baseVal -= 1
+            approx = cv2.approxPolyDP(main_contour, baseVal, True)
+        while len(approx) > 4:
+            baseVal += 1
+            approx = cv2.approxPolyDP(main_contour, baseVal, True)
 
         cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
         cv2.drawContours(img, [approx], -1, (0, 0, 255), 2)
