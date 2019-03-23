@@ -32,7 +32,7 @@ while True:
     thresh[y_max:,:] = 0
     thresh[:y_min,:] = 0
 
-    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     if contours is not None and len(contours) > 0:
 
