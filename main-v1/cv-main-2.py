@@ -57,13 +57,18 @@ if contours is not None and len(contours) > 0:
     print(angleDev * (180/np.pi))
     print(xDev)
 
+    cv2.putText(img, 'Angle Deviation: ' + str(round(angleDev, 2)) + ' rad', (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+    cv2.putText(img, 'Shift: ' + str(xDev) + ' px', (5, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+
+    cv2.imwrite('../../../tmp.jpg', img)
+
 def showImg(img):
     cv2.imshow('img', img)
     while True:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-showImg(orig)
-showImg(thresh)
+# showImg(orig)
+# showImg(thresh)
 showImg(img)
 
