@@ -11,23 +11,29 @@ def main():
     turnTime = 6
 
     writer.setLeftPowerMapped(0)
-    writer.setRightPowerMapped(0.4)
+    writer.setRightPowerMapped(0.2)
     writer.setStepperPositionMapped(1)
     writer.writeAllBytes()
     time.sleep(turnTime)
+
+    slideTime = 23
     
     writer.setLeftPowerMapped(0)
     writer.setRightPowerMapped(0)
     writer.writeAllBytes()
-    time.sleep(21 - turnTime)
+    time.sleep(slideTime - turnTime)
+
+    lightTime = 3
 
     time.sleep(0.5)
     writer.setBit(2, 1)
     writer.writeAllBytes()
-    time.sleep(1)
+    time.sleep(lightTime)
     writer.setBit(2, 0)
     writer.writeAllBytes()
     time.sleep(0.5)
+
+    pumpTime = 2
 
     if relay1:
         writer.setBit(1, 1)
