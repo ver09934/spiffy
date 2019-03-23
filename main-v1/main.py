@@ -8,7 +8,7 @@ def main():
     writer = serialwriter.SerialWriter()
     time.sleep(3)
 
-    turnTime = 2.5
+    turnTime = 2
 
     writer.setLeftPowerMapped(0)
     writer.setRightPowerMapped(0.3)
