@@ -28,9 +28,6 @@ The hospital disinfection robot.
     $ sudo apt update && sudo apt upgrade
     $ sudo apt install tmux vim python3-venv tree
     ```
-    <!---
-    TODO: Update installed packages and add git aliases, .vimrc, etc.
-    -->
 * Add aliases to `~/.bashrc`
     ```
     alias la="ls -a"
@@ -63,9 +60,6 @@ The hospital disinfection robot.
     $ sudo apt install libatlas3-base libsz2 libharfbuzz0b libtiff5 libjasper1 libilmbase12 libopenexr22 libilmbase12 libgstreamer1.0-0 libavcodec57 libavformat57 libavutil55 libswscale4 libqtgui4 libqt4-test libqtcore4
     $ pip install pyserial opencv-python imutils numpy
     ```
-    <!---
-    TODO: `pip install serial` needed?
-    -->
 * Hardware configuration
     ```
     $ sudo raspi-config
