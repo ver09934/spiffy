@@ -15,6 +15,7 @@ stdscr.addstr(0, 0, "Use up/left/right to drive, any key to stop, i/o for relays
 stdscr.refresh()
 
 currentDirection = "Stop"
+newDirection = "Stop"
 
 relay1 = False
 relay2 = False
