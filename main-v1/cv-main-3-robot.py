@@ -7,9 +7,9 @@ serialWriter = serialwriter.SerialWriter()
 time.sleep(3.5)
 
 cap = cv2.VideoCapture(-1)
-out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
+# out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
 
-speed = 0.05
+speed = 0.3
 
 x_deviation = 0
 gtzero_cur = False
@@ -34,16 +34,17 @@ while True:
         main_contour = max(contours, key = cv2.contourArea)
 
         moments = cv2.moments(main_contour)
-        center_x = int(moments["m10"] / moments["m00"])
-        center_y = int(moments["m01"] / moments["m00"])
+        if moments["m00"] != 0:
+            center_x = int(moments["m10"] / moments["m00"])
+            # center_y = int(moments["m01"] / moments["m00"])
 
-        cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
-        cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
+            # cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
+            # cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
 
-        img_centerline = img.shape[1] / 2
-        x_deviation = center_x - img_centerline
+            img_centerline = img.shape[1] / 2
+            x_deviation = center_x - img_centerline
 
-    out.write(img)
+    # out.write(img)
     print(x_deviation)
 
 
