@@ -9,11 +9,13 @@ time.sleep(3.5)
 cap = cv2.VideoCapture(-1)
 # out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
 
-speed = 0.3
+base_speed = 2
+kp = 0.01
+
+counter = 1
+countFreq = 2
 
 x_deviation = 0
-gtzero_cur = False
-gtzero_prev = False
 
 while True:
 
@@ -47,18 +49,22 @@ while True:
     # out.write(img)
     print(x_deviation)
 
-
-    gtzero_prev = gtzero_cur
-
     if x_deviation > 0:
-        serialWriter.setLeftPowerMapped(speed)
-        serialWriter.setRightPowerMapped(0)
-        gtzero_cur = True
+        leftSpeed = base_speed
+        rightSpeed = base_speed - (kp * x_deviation)
     else:
-        serialWriter.setLeftPowerMapped(0)
-        serialWriter.setRightPowerMapped(speed)
-        gtzero_cur = False
+        leftSpeed = base_speed + (kp * x_deviation)
+        rightSpeed = base_speed
 
-    if gtzero_prev != gtzero_cur:
+    leftSpeed = serialwriter.clamp(leftSpeed, 0, 1)
+    rightSpeed = serialwriter.clamp(rightSpeed, 0, 1)
+
+    serialWriter.setLeftPowerMapped(leftSpeed)
+    serialWriter.setRightPowerMapped(rightSpeed)
+
+    print(x_deviation)
+
+    if counter % countFreq == 0:
         serialWriter.writeAllBytes()
-        print("--- Sent data ---")
+        print("--- Sent Data ---")
+    counter += 1
