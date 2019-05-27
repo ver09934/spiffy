@@ -8,7 +8,9 @@ time.sleep(3.5)
 
 cap = cv2.VideoCapture(-1)
 
-baseSpeed = 0.3
+out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
+
+baseSpeed = 0.1
 kp = 0.01
 counter = 1
 countFreq = 2
@@ -32,6 +34,10 @@ while True:
 
         moments = cv2.moments(main_contour)
         center_x = int(moments["m10"] / moments["m00"])
+        center_y = int(moments["m01"] / moments["m00"])
+
+        cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
+        cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
 
         img_centerline = img.shape[1] / 2
         x_deviation = center_x - img_centerline
@@ -39,6 +45,8 @@ while True:
     else:
         
         x_deviation = 0
+
+    out.write(img)
     
     leftSpeed = baseSpeed + (kp * x_deviation)
     rightSpeed = baseSpeed - (kp * x_deviation)
