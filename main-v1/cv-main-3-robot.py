@@ -9,7 +9,7 @@ time.sleep(3.5)
 cap = cv2.VideoCapture(-1)
 
 baseSpeed = 0.3
-kp = 0.05
+kp = 0.01
 counter = 1
 countFreq = 2
 
@@ -40,8 +40,8 @@ while True:
         
         x_deviation = 0
     
-    leftSpeed = baseSpeed - kp * angleDev
-    rightSpeed = baseSpeed + kp * angleDev
+    leftSpeed = baseSpeed + (kp * x_deviation)
+    rightSpeed = baseSpeed - (kp * x_deviation)
 
     leftSpeed = serialwriter.clamp(leftSpeed, 0, 1)
     rightSpeed = serialwriter.clamp(rightSpeed, 0, 1)
@@ -49,8 +49,10 @@ while True:
     serialWriter.setLeftPowerMapped(leftSpeed)
     serialWriter.setRightPowerMapped(rightSpeed)
 
+    print(x_deviation)
+
     if counter % countFreq == 0:
         serialWriter.writeAllBytes()
-        print("--- Sent data ---")
+        # print("--- Sent data ---")
     counter += 1
     
