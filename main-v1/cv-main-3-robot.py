@@ -7,13 +7,13 @@ serialWriter = serialwriter.SerialWriter()
 time.sleep(3.5)
 
 cap = cv2.VideoCapture(-1)
-
 out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
 
-baseSpeed = 0.1
-kp = 0.01
-counter = 1
-countFreq = 2
+speed = 0.05
+
+x_deviation = 0
+gtzero_cur = False
+gtzero_prev = False
 
 while True:
 
@@ -27,6 +27,7 @@ while True:
     thresh[:y_min,:] = 0
 
     _, contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
 
     if contours is not None and len(contours) > 0:
 
@@ -42,25 +43,21 @@ while True:
         img_centerline = img.shape[1] / 2
         x_deviation = center_x - img_centerline
 
-    else:
-        
-        x_deviation = 0
-
     out.write(img)
-    
-    leftSpeed = baseSpeed + (kp * x_deviation)
-    rightSpeed = baseSpeed - (kp * x_deviation)
-
-    leftSpeed = serialwriter.clamp(leftSpeed, 0, 1)
-    rightSpeed = serialwriter.clamp(rightSpeed, 0, 1)
-
-    serialWriter.setLeftPowerMapped(leftSpeed)
-    serialWriter.setRightPowerMapped(rightSpeed)
-
     print(x_deviation)
 
-    if counter % countFreq == 0:
+
+    gtzero_prev = gtzero_cur
+
+    if x_deviation > 0:
+        serialWriter.setLeftPowerMapped(speed)
+        serialWriter.setRightPowerMapped(0)
+        gtzero_cur = True
+    else:
+        serialWriter.setLeftPowerMapped(0)
+        serialWriter.setRightPowerMapped(speed)
+        gtzero_cur = False
+
+    if gtzero_prev != gtzero_cur:
         serialWriter.writeAllBytes()
-        # print("--- Sent data ---")
-    counter += 1
-    
+        print("--- Sent data ---")
