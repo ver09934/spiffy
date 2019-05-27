@@ -11,8 +11,10 @@ cap = cv2.VideoCapture(-1)
 
 # base_speed = 2
 # kp = 0.01
+# base_speed = 0.3
+# kp = 0.001
 base_speed = 0.3
-kp = 0.001
+kp = 0.000005
 
 counter = 1
 countFreq = 2
@@ -51,11 +53,13 @@ while True:
     # out.write(img)
     print(x_deviation)
 
+    tmp = x_deviation**2 * np.sign(x_deviation)
+
     if x_deviation > 0:
         leftSpeed = base_speed
-        rightSpeed = base_speed - (kp * x_deviation)
+        rightSpeed = base_speed - (kp * tmp)
     else:
-        leftSpeed = base_speed + (kp * x_deviation)
+        leftSpeed = base_speed + (kp * tmp)
         rightSpeed = base_speed
 
     leftSpeed = serialwriter.clamp(leftSpeed, 0, 1)
