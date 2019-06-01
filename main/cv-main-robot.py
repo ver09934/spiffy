@@ -9,10 +9,13 @@ time.sleep(3.5)
 cap = cv2.VideoCapture(-1)
 # out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
 
+# -- Original error --
 # base_speed = 2
 # kp = 0.01
 # base_speed = 0.3
 # kp = 0.001
+
+# -- Squared error --
 base_speed = 0.3
 kp = 0.000005
 
@@ -22,6 +25,8 @@ countFreq = 2
 x_deviation = 0
 
 while True:
+
+    start_time = time.time()
 
     ret, img = cap.read()
 
@@ -42,8 +47,8 @@ while True:
         moments = cv2.moments(main_contour)
         if moments["m00"] != 0:
             center_x = int(moments["m10"] / moments["m00"])
-            # center_y = int(moments["m01"] / moments["m00"])
 
+            # center_y = int(moments["m01"] / moments["m00"])
             # cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
             # cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
 
@@ -51,8 +56,8 @@ while True:
             x_deviation = center_x - img_centerline
 
     # out.write(img)
-    print(x_deviation)
 
+    # Square the error but maintain the sign
     tmp = x_deviation**2 * np.sign(x_deviation)
 
     if x_deviation > 0:
@@ -68,9 +73,10 @@ while True:
     serialWriter.setLeftPowerMapped(leftSpeed)
     serialWriter.setRightPowerMapped(rightSpeed)
 
-    print(x_deviation)
-
     if counter % countFreq == 0:
         serialWriter.writeAllBytes()
         print("--- Sent Data ---")
     counter += 1
+
+    end_time = time.time()
+    print("x-deviation: {} px looptime: {} s".format(x_deviation, end_time - start_time))
