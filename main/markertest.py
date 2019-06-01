@@ -1,11 +1,6 @@
 import numpy as np
-import cv2, PIL
+import cv2
 from cv2 import aruco
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import pandas as pd
-
-# pip install pillow opencv-python matplotlib pandas aruco
 
 import time
 
