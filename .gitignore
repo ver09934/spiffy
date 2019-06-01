@@ -7,6 +7,9 @@
 __pycache__
 venv
 
+# another venv I named...
+arc
+
 # images
 *.png
 *.jpg
