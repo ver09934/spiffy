@@ -20,7 +20,8 @@ base_speed = 0.3
 kp = 0.000005
 
 counter = 1
-countFreq = 2
+send_data_freq = 2
+marker_freq = 5
 
 x_deviation = 0
 
@@ -28,6 +29,10 @@ while True:
 
     start_time = time.time()
 
+    # TODO: VERY IMPORTANT
+    # If we pause for 10-15 seconds to perform an action, what will happen?
+    # BAD: We start reading frames from the buffer where we left off...
+    # GOOD: We start grabbing frames in real time
     ret, img = cap.read()
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -38,7 +43,6 @@ while True:
     thresh[:y_min,:] = 0
 
     _, contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
 
     if contours is not None and len(contours) > 0:
 
@@ -62,8 +66,10 @@ while True:
 
     if x_deviation > 0:
         leftSpeed = base_speed
+        # rightSpeed = base_speed - (kp * x_deviation)
         rightSpeed = base_speed - (kp * tmp)
     else:
+        # leftSpeed = base_speed + (kp * x_deviation)
         leftSpeed = base_speed + (kp * tmp)
         rightSpeed = base_speed
 
@@ -73,10 +79,38 @@ while True:
     serialWriter.setLeftPowerMapped(leftSpeed)
     serialWriter.setRightPowerMapped(rightSpeed)
 
-    if counter % countFreq == 0:
+    if counter % send_data_freq == 0:
         serialWriter.writeAllBytes()
         print("--- Sent Data ---")
     counter += 1
 
+    marker_warning = ""
+
+    if counter % marker_freq == 0:
+        aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
+        parameters =  aruco.DetectorParameters_create()
+        corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
+        frame_markers = aruco.drawDetectedMarkers(frame.copy(), corners, ids)
+
+        if ids is not None:
+            if len(ids) > 1:
+                marker_warning = "WARNING: Multiple markers in frame"
+            id = ids[0][0]
+            if id == 39: # TODO: Move this hardcoded value to a variable
+
+                serialWriter.setLeftPowerMapped(0)
+                serialWriter.setRightPowerMapped(0)
+                serialWriter.writeAllBytes()
+                time.sleep(0.5)
+
+                serialWriter.setStepperPositionMapped(0.25)
+                serialWriter.writeAllBytes()
+                time.sleep(6)
+
+                serialWriter.setStepperPositionMapped(0.25)
+                serialWriter.writeAllBytes()
+                time.sleep(6)
+
     end_time = time.time()
-    print("x-deviation: {} px looptime: {} s".format(x_deviation, end_time - start_time))
+
+    print("x-deviation: {:.0f} px\tlooptime: {:.4f} s\t{}".format(x_deviation, end_time - start_time, warning_string))
