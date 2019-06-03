@@ -1,4 +1,5 @@
 import cv2
+from cv2 import aruco
 import numpy as np
 import time
 import serialwriter
@@ -9,6 +10,9 @@ time.sleep(3.5)
 cap = cv2.VideoCapture(-1)
 # out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
 
+aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
+parameters =  aruco.DetectorParameters_create()
+
 # -- Original error --
 # base_speed = 2
 # kp = 0.01
@@ -16,8 +20,10 @@ cap = cv2.VideoCapture(-1)
 # kp = 0.001
 
 # -- Squared error --
-base_speed = 0.3
-kp = 0.000005
+# base_speed = 0.3
+# kp = 0.000005
+base_speed = 0.25
+kp = 0.000006
 
 counter = 1
 send_data_freq = 2
@@ -86,11 +92,10 @@ while True:
 
     marker_warning = ""
 
+    # TODO: Only run when a marker is seen and then not seen
     if counter % marker_freq == 0:
-        aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
-        parameters =  aruco.DetectorParameters_create()
         corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
-        frame_markers = aruco.drawDetectedMarkers(frame.copy(), corners, ids)
+        # frame_markers = aruco.drawDetectedMarkers(img.copy(), corners, ids)
 
         if ids is not None:
             if len(ids) > 1:
@@ -107,10 +112,10 @@ while True:
                 serialWriter.writeAllBytes()
                 time.sleep(6)
 
-                serialWriter.setStepperPositionMapped(0.25)
+                serialWriter.setStepperPositionMapped(0)
                 serialWriter.writeAllBytes()
                 time.sleep(6)
 
     end_time = time.time()
 
-    print("x-deviation: {:.0f} px\tlooptime: {:.4f} s\t{}".format(x_deviation, end_time - start_time, warning_string))
+    print("x-deviation: {:.0f} px\tlooptime: {:.4f} s\t{}".format(x_deviation, end_time - start_time, marker_warning))

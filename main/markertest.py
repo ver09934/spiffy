@@ -4,7 +4,8 @@ from cv2 import aruco
 
 import time
 
-cap = cv2.VideoCapture(2)
+# cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(-1)
 
 while(True):
 
@@ -19,9 +20,11 @@ while(True):
     corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
     frame_markers = aruco.drawDetectedMarkers(frame.copy(), corners, ids)
 
+    ''''
     cv2.imshow('img', frame_markers)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    '''
 
     # print("looptime: {} s" .format(time.time() - start_time))
 
@@ -31,4 +34,4 @@ while(True):
         print()
 
 cap.release()
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
