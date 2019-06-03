@@ -13,7 +13,7 @@ cap = cv2.VideoCapture(-1)
 aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
 parameters =  aruco.DetectorParameters_create()
 # print(dir(parameters))
-parameters.polygonalApproxAccuracyRate = 0.1
+# parameters.polygonalApproxAccuracyRate = 0.1
 
 # -- Original error --
 # base_speed = 2
