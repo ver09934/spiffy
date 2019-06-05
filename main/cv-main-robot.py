@@ -15,32 +15,22 @@ parameters =  aruco.DetectorParameters_create()
 # print(dir(parameters))
 # parameters.polygonalApproxAccuracyRate = 0.1
 
-# -- Original error --
-# base_speed = 2
-# kp = 0.01
-# base_speed = 0.3
-# kp = 0.001
-
-# -- Squared error --
-# base_speed = 0.3
-# kp = 0.000005
 base_speed = 0.25
-kp = 0.000006
+
+kp = 0.01
+ki = 0.02
 
 counter = 1
 send_data_freq = 2
 marker_freq = 5
 
 x_deviation = 0
+i_term = 0
+looptime = 0
+start_time = time.time()
 
 while True:
 
-    start_time = time.time()
-
-    # TODO: VERY IMPORTANT
-    # If we pause for 10-15 seconds to perform an action, what will happen?
-    # BAD: We start reading frames from the buffer where we left off...
-    # GOOD: We start grabbing frames in real time
     ret, img = cap.read()
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -69,16 +59,19 @@ while True:
 
     # out.write(img)
 
-    # Square the error but maintain the sign
-    tmp = x_deviation**2 * np.sign(x_deviation)
+    end_time = time.time()
+    looptime = end_time - start_time
+    start_time = time.time()
+
+    p_term = kp * x_deviation
+    i_term += ki * x_deviation * looptime
+    output = p_term + i_term
 
     if x_deviation > 0:
         leftSpeed = base_speed
-        # rightSpeed = base_speed - (kp * x_deviation)
-        rightSpeed = base_speed - (kp * tmp)
+        rightSpeed = base_speed - output
     else:
-        # leftSpeed = base_speed + (kp * x_deviation)
-        leftSpeed = base_speed + (kp * tmp)
+        leftSpeed = base_speed + output
         rightSpeed = base_speed
 
     leftSpeed = serialwriter.clamp(leftSpeed, 0, 1)
@@ -92,17 +85,16 @@ while True:
         print("--- Sent Data ---")
     counter += 1
 
-    marker_warning = ""
-
     # TODO: Only run when a marker is seen and then not seen
+    # TODO: Don't detect two of the same marker consecutively
     if counter % marker_freq == 0:
         corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
         # frame_markers = aruco.drawDetectedMarkers(img.copy(), corners, ids)
 
         if ids is not None:
-            if len(ids) > 1:
-                marker_warning = "WARNING: Multiple markers in frame"
+            
             id = ids[0][0]
+            
             if id == 39: # TODO: Move this hardcoded value to a variable
 
                 serialWriter.setLeftPowerMapped(0)
@@ -118,6 +110,12 @@ while True:
                 serialWriter.writeAllBytes()
                 time.sleep(6)
 
-    end_time = time.time()
+            if id == 40:
 
-    print("x-deviation: {:.0f} px\tlooptime: {:.4f} s\t{}".format(x_deviation, end_time - start_time, marker_warning))
+                serialWriter.setLeftPowerMapped(0)
+                serialWriter.setRightPowerMapped(0)
+                serialWriter.writeAllBytes()
+                time.sleep(10**5) # Laziness
+
+    # TODO: Need more telem for PI controller
+    print("x-deviation: {:.0f} px\tlooptime: {:.4f} s".format(x_deviation, looptime))
