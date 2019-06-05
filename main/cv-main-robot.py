@@ -13,7 +13,8 @@ cap = cv2.VideoCapture(-1)
 aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
 parameters =  aruco.DetectorParameters_create()
 # print(dir(parameters))
-# parameters.polygonalApproxAccuracyRate = 0.1
+parameters.polygonalApproxAccuracyRate = 0.1
+parameters.errorCorrectionRate = 1
 
 # ------------------
 # base_speed = 0.25
@@ -94,7 +95,7 @@ while True:
         print("--- Sent Data ---")
     counter += 1
 
-    # TODO: Only run when a marker is seen and then not seen
+    # TODO: Only run when a marker is seen one iteration and then not seen the next iteration
     # TODO: Don't detect two of the same marker consecutively
     if counter % marker_freq == 0:
         corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=parameters)
@@ -113,13 +114,27 @@ while True:
                 serialWriter.writeAllBytes()
                 time.sleep(0.5)
 
-                serialWriter.setStepperPositionMapped(0.25)
+                serialWriter.setStepperPositionMapped(1)
                 serialWriter.writeAllBytes()
-                time.sleep(6)
+                time.sleep(24)
+
+                serialWriter.setBit(2, 1)
+                serialWriter.writeAllBytes()
+                time.sleep(5)
+                serialWriter.setBit(2, 0)
+                serialWriter.writeAllBytes()
+                time.sleep(0.5)
+
+                serialWriter.setBit(1, 1)
+                serialWriter.writeAllBytes()
+                time.sleep(2)
+                serialWriter.setBit(1, 0)
+                serialWriter.writeAllBytes()
+                time.sleep(0.5)
 
                 serialWriter.setStepperPositionMapped(0)
                 serialWriter.writeAllBytes()
-                time.sleep(6)
+                time.sleep(24)
 
             if id == 40:
 
