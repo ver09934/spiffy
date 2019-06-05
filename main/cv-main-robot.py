@@ -9,12 +9,13 @@ time.sleep(3.5)
 
 cap = cv2.VideoCapture(-1)
 # out = cv2.VideoWriter('/home/pi/out.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (640, 480))
+# TODO: Fancy image for poster
 
 aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
 parameters =  aruco.DetectorParameters_create()
 # print(dir(parameters))
-parameters.polygonalApproxAccuracyRate = 0.1
-parameters.errorCorrectionRate = 1
+# parameters.polygonalApproxAccuracyRate = 0.3
+# parameters.errorCorrectionRate = 1
 
 # ------------------
 # base_speed = 0.25
@@ -38,6 +39,8 @@ x_deviation = 0
 i_term = 0
 looptime = 0
 start_time = time.time()
+
+zero_iterm = False
 
 while True:
 
@@ -75,6 +78,9 @@ while True:
 
     p_term = kp * x_deviation
     i_term += ki * x_deviation * looptime
+    if zero_iterm == True:
+        i_term = 0
+        zero_iterm = False
     output = p_term + i_term
 
     if x_deviation > 0:
@@ -103,9 +109,11 @@ while True:
 
         if ids is not None:
 
-            i_term = 0 # Otherwise the i-term grows very large, since this interruption makes the looptime very long
+            zero_iterm = True # Otherwise the i-term grows very large, since this interruption makes the looptime very long
             
             id = ids[0][0]
+
+            # TODO: 38, 39 are gantry, 40 is stop
             
             if id == 39: # TODO: Move this hardcoded value to a variable
 
