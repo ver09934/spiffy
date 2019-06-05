@@ -15,10 +15,19 @@ parameters =  aruco.DetectorParameters_create()
 # print(dir(parameters))
 # parameters.polygonalApproxAccuracyRate = 0.1
 
+# ------------------
+# base_speed = 0.25
+# kp = 0.001
+# ki = 0.0
+# ------------------
+# base_speed = 0.25
+# kp = 0.0006
+# ki = 0.0
+# ------------------
 base_speed = 0.25
-
-kp = 0.01
-ki = 0.02
+kp = 0.0008
+ki = 0.00006
+# ------------------
 
 counter = 1
 send_data_freq = 2
@@ -35,9 +44,9 @@ while True:
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (11, 11), 0)
-    ret, thresh = cv2.threshold(blurred, 30, 255, cv2.THRESH_BINARY_INV)
+    ret, thresh = cv2.threshold(blurred, 70, 255, cv2.THRESH_BINARY_INV)
 
-    y_min = int(img.shape[0] * 0.8)
+    y_min = int(img.shape[0] * 0.35)
     thresh[:y_min,:] = 0
 
     _, contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -92,6 +101,8 @@ while True:
         # frame_markers = aruco.drawDetectedMarkers(img.copy(), corners, ids)
 
         if ids is not None:
+
+            i_term = 0 # Otherwise the i-term grows very large, since this interruption makes the looptime very long
             
             id = ids[0][0]
             
