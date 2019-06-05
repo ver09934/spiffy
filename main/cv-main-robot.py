@@ -63,7 +63,7 @@ while True:
         if moments["m00"] != 0:
             center_x = int(moments["m10"] / moments["m00"])
 
-            cv2.line(img, (img.shape[1] / 2, 0), (img.shape[1] / 2, img.shape[0]), (255, 0, 0), 2)
+            cv2.line(img, (int(img.shape[1] / 2), 0), (int(img.shape[1] / 2), img.shape[0]), (255, 0, 0), 2)
             center_y = int(moments["m01"] / moments["m00"])
             cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
             cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
