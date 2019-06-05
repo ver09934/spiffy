@@ -63,9 +63,10 @@ while True:
         if moments["m00"] != 0:
             center_x = int(moments["m10"] / moments["m00"])
 
-            # center_y = int(moments["m01"] / moments["m00"])
-            # cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
-            # cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
+            cv2.line(img, (img.shape[1] / 2, 0), (img.shape[1] / 2, img.shape[0]), (255, 0, 0), 2)
+            center_y = int(moments["m01"] / moments["m00"])
+            cv2.drawContours(img, [main_contour], -1, (0, 255, 0), 2)
+            cv2.circle(img, (center_x, center_y), 3, (0, 0, 255), 2) # last arg -1 solid
 
             img_centerline = img.shape[1] / 2
             x_deviation = center_x - img_centerline
@@ -108,6 +109,12 @@ while True:
         # frame_markers = aruco.drawDetectedMarkers(img.copy(), corners, ids)
 
         if ids is not None:
+
+            img = aruco.drawDetectedMarkers(img, corners, ids)
+            cv2.putText(img, 'x-deviation: {} px'.format(x_deviation), (5, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+            cv2.putText(img, 'looptime: {:.4f} s'.format(looptime), (5, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2, cv2.LINE_AA)
+            import os
+            cv2.imwrite(os.path.expanduser('~/test.jpg',), img)
 
             zero_iterm = True # Otherwise the i-term grows very large, since this interruption makes the looptime very long
             
