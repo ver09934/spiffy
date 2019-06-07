@@ -67,7 +67,7 @@ Once the repository is cloned down, the dependencies need to be installed.
     pip install opencv-python
     --->
     ```
-    $ sudo apt install python-serial python3-serial python-dev python3-dev libatlas3-base libsz2 libharfbuzz0b libtiff5 libjasper1 libilmbase12 libopenexr22 libilmbase12 libgstreamer1.0-0 libavcodec57 libavformat57 libavutil55 libswscale4 libqtgui4 libqt4-test libqtcore4 libhdf5-100
+    $ sudo apt install python-serial python3-serial python-dev python3-dev libatlas3-base libsz2 libharfbuzz0b libtiff5 libjasper1 libilmbase12 libopenexr22 libilmbase12 libgstreamer1.0-0 libavcodec57 libavformat57 libavutil55 libswscale4 libqtgui4 libqt4-test libqtcore4 libhdf5-100 python-rpi.gpio python3-rpi.gpio
     ```
 * Install python packages with `pip` (ideally in a virtual environment, create one by running `python3 -m venv venv` and activate with `. venv/bin/activate`)
     ```
