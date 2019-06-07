@@ -42,6 +42,8 @@ start_time = time.time()
 
 zero_iterm = False
 
+prev_id = None
+
 while True:
 
     ret, img = cap.read()
@@ -112,10 +114,8 @@ while True:
             zero_iterm = True # Otherwise the i-term grows very large, since this interruption makes the looptime very long
             
             id = ids[0][0]
-
-            # TODO: 38, 39 are gantry, 40 is stop
             
-            if id == 39: # TODO: Move this hardcoded value to a variable
+            if (id == 38 and prev_id != 38) or (id == 39 and prev_id != 39):
 
                 serialWriter.setLeftPowerMapped(0)
                 serialWriter.setRightPowerMapped(0)
@@ -149,7 +149,11 @@ while True:
                 serialWriter.setLeftPowerMapped(0)
                 serialWriter.setRightPowerMapped(0)
                 serialWriter.writeAllBytes()
-                time.sleep(10**5) # Laziness
+                break
+
+            prev_id = id
 
     # TODO: Need more telem for PI controller
     print("x-deviation: {:.0f} px\tlooptime: {:.4f} s".format(x_deviation, looptime))
+
+cap.release()
