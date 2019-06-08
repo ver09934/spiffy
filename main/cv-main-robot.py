@@ -138,12 +138,14 @@ while True:
                 serialWriter.writeAllBytes()
                 time.sleep(0.5)
 
+                '''
                 serialWriter.setBit(1, 1)
                 serialWriter.writeAllBytes()
                 time.sleep(2)
                 serialWriter.setBit(1, 0)
                 serialWriter.writeAllBytes()
                 time.sleep(0.5)
+                '''
 
                 serialWriter.setStepperPositionMapped(0)
                 serialWriter.writeAllBytes()
