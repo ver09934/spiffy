@@ -50,10 +50,15 @@ while True:
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (11, 11), 0)
-    ret, thresh = cv2.threshold(blurred, 70, 255, cv2.THRESH_BINARY_INV)
+    # ret, thresh = cv2.threshold(blurred, 70, 255, cv2.THRESH_BINARY_INV)
+    ret, thresh = cv2.threshold(blurred, 180, 255, cv2.THRESH_BINARY)
 
     y_min = int(img.shape[0] * 0.35)
     thresh[:y_min,:] = 0
+
+    # TODO: Remove if looptime too long
+    kernel = np.ones((5,5),np.uint8)
+    thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
     _, contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
