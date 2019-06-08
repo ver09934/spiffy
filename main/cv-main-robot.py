@@ -57,8 +57,8 @@ while True:
     thresh[:y_min,:] = 0
 
     # TODO: Remove if looptime too long
-    kernel = np.ones((5,5),np.uint8)
-    thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
+    # kernel = np.ones((5,5),np.uint8)
+    # thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
     _, contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
