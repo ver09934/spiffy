@@ -27,7 +27,7 @@ parameters =  aruco.DetectorParameters_create()
 # ki = 0.0
 # ------------------
 base_speed = 0.25
-kp = 0.0008
+kp = 0.0005
 ki = 0.00006
 # ------------------
 
