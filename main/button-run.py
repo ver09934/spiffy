@@ -5,7 +5,7 @@ from subprocess import Popen
 button_pin = 4
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 button_lock = False
 
